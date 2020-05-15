@@ -1,5 +1,7 @@
 # Multi-Task Batch RL
 
+TODO: Change the name of tiMe.
+
 This repository contains the code accompanying 'Multi-Task Batch Reinforcement Learning', that is submitted to the NeurIPS 2020
 
 The codes to generate the transition batch for each training tasks was by modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
@@ -10,7 +12,7 @@ Codes for the full model algorithm and each of the baseline and ablation can be 
 
 # Reproducing Results
 
-To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the Google Drive (TODO:), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data``` folder. Otherwise you should be careful when running the following experiments and you should corretly specify the locations.
+To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/open?id=1ZNmxYE3Gym2uxSmV5OjAkKRWECrQgez1), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data``` folder. Otherwise you should be careful when running the following experiments and you should corretly specify the locations.
 
 Experiments are configured via `.py` configuration files located in `./configs`. To reproduce an experiment, you can first go to the corresponding folder, and then run the following commands:
 
@@ -28,7 +30,7 @@ python main.py --config=ant-dir
 
 # Running Experiments
 
-If you would like to generate these results for the training phase, first you can go to the ``oac-explore`` folder and run the following command to obtain the training buffers:
+If you would like to generate these results for the training phase, first you can go to the ``oac-explore`` folder and run the following command to obtain the training buffers. Note that the list of ``goal_id`` is varying from domain to domain:
 
 ```
 python main.py --config=DOMAIN_NAME --goal=GOAL_ID

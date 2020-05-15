@@ -66,7 +66,9 @@ def get_log_dir(variant):
 if __name__ == "__main__":
 	
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--config', default='humanoid-ndone-goal-normal-200-10tasks')
+	parser.add_argument('--config', default='ant-dir')
+	parser.add_argument('--data_models_root', default='../data_and_trained_models')
+
 	args = parser.parse_args()
 
 	if args.config:
@@ -93,11 +95,9 @@ if __name__ == "__main__":
 	variant['idx_list'] = idx_list
 
 	# Directory to the buffers, trained policies and ensemble_params
-	if socket.gethostname() == 'cauchy':
-		buffer_dir = f"/hdd/jiachen/{variant['domain']}-{variant['max_path_length']}-{variant['exp_mode']}-buffers"
-	else:
-		buffer_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-		
+	sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+	buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+
 	print("Buffer directory: " + buffer_dir)
 
 	variant['algo_params']['train_goals'] = train_goals[:num_tasks]
