@@ -4,15 +4,15 @@ TODO: Change the name of tiMe.
 
 This repository contains the code accompanying 'Multi-Task Batch Reinforcement Learning', that is submitted to the NeurIPS 2020
 
-The codes to generate the transition batch for each training tasks was by modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
+The codes to generate the transition batch for each training tasks was by modifying the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore). Note that here we only run the SAC.
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
 
-Codes for the full model algorithm and each of the baseline and ablation can be found under their correponding folder.
+Codes for the full model algorithm and each of the baseline and ablation can be found under their corresponding folder.
 
 # Reproducing Results
 
-To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/open?id=1ZNmxYE3Gym2uxSmV5OjAkKRWECrQgez1), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data``` folder. Otherwise you should be careful when running the following experiments and you should corretly specify the locations.
+To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/open?id=1ZNmxYE3Gym2uxSmV5OjAkKRWECrQgez1), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data``` folder. Otherwise you should be careful when running the following experiments and you should correctly specify the locations.
 
 Experiments are configured via `.py` configuration files located in `./configs`. To reproduce an experiment, you can first go to the corresponding folder, and then run the following commands:
 
@@ -36,13 +36,13 @@ If you would like to generate these results for the training phase, first you ca
 python main.py --config=DOMAIN_NAME --goal=GOAL_ID
 ```
 
-Then you can go the the ``BCQ`` folder and run te following command to extract task-specific results:
+Then you can go the the ``BCQ`` folder and run the following command to extract task-specific results:
 
 ```
 python main.py --config=DOMAIN_NAME --goal=GOAL_ID
 ```
 
-Simultaneously, you can get the model prediction ensembles by going to the ``reward_prediction_ensemble`` and runing
+Simultaneously, you can get the model prediction ensembles by going to the ``reward_prediction_ensemble`` and running
 
 ```
 python main.py --config=DOMAIN_NAME --goal=GOAL_ID
@@ -57,23 +57,21 @@ python install_mujoco.py
 conda env create -f environment.yml
 ```
 
+TODO: add link to pull docker image that you built
+
+The [docker image](https://hub.docker.com/layers/jiachenli/oac-explore/sixthtry/images/sha256-e234fdfd7f7bd1e776c2d3b110cae415d6f7e51279434155348816462deb58c8?context=repo) is provided here 
 # Acknowledgement
 
-This reposity was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
+This repository was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
 
 # Citation
+
+TODO: add citation once paper is uploaded
 
 If you use the codebase, please cite the paper:
 
 ```
-@misc{oac,
-    title={Better Exploration with Optimistic Actor-Critic},
-    author={Kamil Ciosek and Quan Vuong and Robert Loftin and Katja Hofmann},
-    year={2019},
-    eprint={1910.12807},
-    archivePrefix={arXiv},
-    primaryClass={stat.ML}
-}
+
 ```
 
 # Contributing
