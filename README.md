@@ -1,8 +1,10 @@
 # Multi-Task Batch RL
 
+TODO: you have typo, pls run the final run though a spell checker.
+
 This repository contains the code accompanying 'Multi-Task Batch Reinforcement Learning', that is submitted to the NeurIPS 2020
 
-The codes to generate the transition batch for each training tasks was by modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
+The codes to generate the transition batch for each training tasks was by modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore). TODO: specify that only SAC was run.
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
 
@@ -55,12 +57,18 @@ python install_mujoco.py
 conda env create -f environment.yml
 ```
 
+TODO: add link to pull docker image that you built
+
 # Acknowledgement
 
 This reposity was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
 
-# Citation
+TODO: remove citation and license section
 
+TODO: add citation once paper is uploaded
+
+# Citation
+ 
 If you use the codebase, please cite the paper:
 
 ```
