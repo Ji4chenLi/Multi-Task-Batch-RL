@@ -4,7 +4,7 @@ TODO: Change the name of tiMe.
 
 This repository contains the code accompanying 'Multi-Task Batch Reinforcement Learning', that is submitted to the NeurIPS 2020
 
-The codes to generate the transition batch for each training tasks was by modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
+The codes to generate the transition batch for each training and codes to acclerate conventional SAC are obtained modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
 
@@ -12,7 +12,7 @@ Codes for the full model algorithm and each of the baseline and ablation can be 
 
 # Reproducing Results
 
-To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/open?id=1ZNmxYE3Gym2uxSmV5OjAkKRWECrQgez1), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data``` folder. Otherwise you should be careful when running the following experiments and you should corretly specify the locations.
+To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/open?id=1ZNmxYE3Gym2uxSmV5OjAkKRWECrQgez1), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data_and_trained_models``` folder. Otherwise you should be careful when running the following experiments and you should corretly specify the locations.
 
 Experiments are configured via `.py` configuration files located in `./configs`. To reproduce an experiment, you can first go to the corresponding folder, and then run the following commands:
 
@@ -21,10 +21,10 @@ Experiments are configured via `.py` configuration files located in `./configs`.
 python main.py --config=DOMAIN_NAME
 ```
 
-For example, if you would like to reproduce the results of ``Ant-Dir``, using the full model, then you should do 
+For example, if you would like to reproduce the results of ``Ant-Dir`` with the full model, then you should do 
 
 ```
-cd tiMe_full_model
+cd full_model
 python main.py --config=ant-dir
 ```
 
@@ -42,11 +42,19 @@ Then you can go the the ``BCQ`` folder and run te following command to extract t
 python main.py --config=DOMAIN_NAME --goal=GOAL_ID
 ```
 
-Simultaneously, you can get the model prediction ensembles by going to the ``reward_prediction_ensemble`` and runing
+Simultaneously, you can get the reward prediction ensembles by going to the ``reward_prediction_ensemble`` and runing
 
 ```
-python main.py --config=DOMAIN_NAME --goal=GOAL_ID
+python main.py --config=DOMAIN_NAME
 ```
+
+and can get the next state prediction ensembles by going to the ``transition_prediction_ensemble`` and runing
+
+```
+python main.py --config=DOMAIN_NAME
+```
+
+Note that you should pay extra attention to ``--data_models_root``.
 
 For software dependencies, please have a look inside the ```environment``` folder, you can either build the Dockerfile, create a conda environment with ```environment.yml``` or pip environment with ```environments.txt```.
 
