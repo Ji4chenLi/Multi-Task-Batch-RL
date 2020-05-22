@@ -68,32 +68,3 @@ conda env create -f environment.yml
 # Acknowledgement
 
 This reposity was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
-
-# Citation
-
-If you use the codebase, please cite the paper:
-
-```
-@misc{oac,
-    title={Better Exploration with Optimistic Actor-Critic},
-    author={Kamil Ciosek and Quan Vuong and Robert Loftin and Katja Hofmann},
-    year={2019},
-    eprint={1910.12807},
-    archivePrefix={arXiv},
-    primaryClass={stat.ML}
-}
-```
-
-# Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
-
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
