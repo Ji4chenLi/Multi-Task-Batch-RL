@@ -1,7 +1,5 @@
 # Multi-Task Batch RL
 
-TODO: Change the name of tiMe.
-
 This repository contains the code accompanying 'Multi-Task Batch Reinforcement Learning', that is submitted to the NeurIPS 2020
 
 The codes to generate the transition batch for each training and codes to acclerate conventional SAC are obtained modiyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
