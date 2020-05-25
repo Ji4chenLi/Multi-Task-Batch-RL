@@ -6,6 +6,8 @@ The codes to generate the transition batch for each training and codes to accler
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
 
+The codes create environment files in the folder ``env`` are adapted from [PEARL](https://github.com/katerakelly/oyster). Note that the ``rand_param_envs`` in each folder is copied from [rand_param_envs](https://github.com/dennisl88/rand_param_envs/tree/4d1529d61ca0d65ed4bd9207b108d4a4662a4da0).
+
 Codes for the full model algorithm and each of the baseline and ablation can be found under their correponding folder.
 
 # Reproducing Results
@@ -19,7 +21,7 @@ Experiments are configured via `.py` configuration files located in `./configs`.
 python main.py --config=DOMAIN_NAME
 ```
 
-For example, if you would like to reproduce the results of ``Ant-Dir`` with the full model, then you should do 
+For example, if you would like to reproduce the results of ``AntDir`` with the full model, then you should do 
 
 ```
 cd full_model
