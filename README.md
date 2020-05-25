@@ -1,4 +1,4 @@
-# Multi-Task Batch RL
+# Multi-Task Batch RL with Metric Learning
 
 This repository contains the code accompanying the paper ```Multi-Task Batch Reinforcement Learning with Metric Learning```.
 
