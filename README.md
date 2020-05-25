@@ -1,6 +1,6 @@
 # Multi-Task Batch RL
 
-This repository contains the code accompanying 'Multi-Task Batch Reinforcement Learning with Metric Learning'.
+This repository contains the code accompanying the paper ```Multi-Task Batch Reinforcement Learning with Metric Learning```.
 
 Codes for the full model algorithm and each of the baseline and ablation can be found under their correponding folder.
 
