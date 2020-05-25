@@ -56,7 +56,7 @@ python main.py --config=DOMAIN_NAME
 
 Note that you should pay extra attention to ``--data_models_root``.
 
-For software dependencies, please have a look inside the ```environment``` folder, you can either build the Dockerfile, create a conda environment with ```environment.yml``` or pip environment with ```environments.txt```.
+For software dependencies, please have a look inside the ```environment``` folder, you can create a conda environment with ```environment.yml```.
 
 To create the conda environment, ```cd``` into the ```environment``` folder and run:
 
