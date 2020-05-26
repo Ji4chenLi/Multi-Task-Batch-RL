@@ -2,11 +2,15 @@
 
 This repository contains the code accompanying the paper ```Multi-Task Batch Reinforcement Learning with Metric Learning```.
 
-Codes for the full model algorithm and each of the baseline and ablation can be found under their correponding folder.
+Codes for the full model algorithm and each of the baseline and ablation can be found under their corresponding folder.
 
 # Reproducing Results
 
-To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/file/d/1YqskGjcPURHs-Al3wGs4ddVKBcw6np5q/view?usp=sharing), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data_and_trained_models``` folder. Otherwise you should be careful when running the following experiments and you should correctly specify the locations.
+To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/file/d/1YqskGjcPURHs-Al3wGs4ddVKBcw6np5q/view?usp=sharing), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data_and_trained_models``` folder. Otherwise you should be careful when running the following experiments and you should correctly specify the locations. After downloading the files from Google Drive, use the command below to unzip the file:
+
+```
+tar -xvf data_and_trained_model.tar.gz
+```
 
 Experiments are configured via `.py` configuration files located in `./configs`. To reproduce an experiment, you can first go to the corresponding folder, and then run the following commands:
 
@@ -35,13 +39,13 @@ Then you can go the the ``BCQ`` folder and run the following command to extract 
 python main.py --config=DOMAIN_NAME --goal=GOAL_ID
 ```
 
-Simultaneously, you can get the reward prediction ensembles by going to the ``reward_prediction_ensemble`` and runing
+Simultaneously, you can get the reward prediction ensembles by going to the ``reward_prediction_ensemble`` and running
 
 ```
 python main.py --config=DOMAIN_NAME
 ```
 
-and can get the next state prediction ensembles by going to the ``transition_prediction_ensemble`` and runing
+and can get the next state prediction ensembles by going to the ``transition_prediction_ensemble`` and running
 
 ```
 python main.py --config=DOMAIN_NAME
@@ -62,7 +66,7 @@ conda env create -f environment.yml
 
 This reposity was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
 
-The codes to generate the transition batch for each task and codes to accelerate conventional SAC are obtained modifyfing the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
+The codes to generate the transition batch for each task and codes to accelerate conventional SAC are obtained modifying the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
 
