@@ -6,7 +6,7 @@ Codes for the full model algorithm and each of the baseline and ablation can be 
 
 # Reproducing Results
 
-To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/open?id=1ZNmxYE3Gym2uxSmV5OjAkKRWECrQgez1), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data_and_trained_models``` folder. Otherwise you should be careful when running the following experiments and you should correctly specify the locations.
+To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/file/d/1YqskGjcPURHs-Al3wGs4ddVKBcw6np5q/view?usp=sharing), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data_and_trained_models``` folder. Otherwise you should be careful when running the following experiments and you should correctly specify the locations.
 
 Experiments are configured via `.py` configuration files located in `./configs`. To reproduce an experiment, you can first go to the corresponding folder, and then run the following commands:
 
