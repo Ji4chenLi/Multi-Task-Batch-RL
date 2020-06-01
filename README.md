@@ -18,11 +18,25 @@ Experiments are configured via `.py` configuration files located in `./configs`.
 python main.py --config=DOMAIN_NAME
 ```
 
-For example, if you would like to reproduce the results of ``AntDir`` with the full model, then you should do 
+Make sure to check the `configs` folder before running any experiment. For example, if you would like to reproduce the results of ``AntDir`` with the full model, then you should do 
 
 ```
 cd full_model
 python main.py --config=ant-dir
+```
+
+An exception is applied when reproducing results of `PEARL` under the batch settings. Here you should do
+
+```
+cd batch_pearl
+python launch_experiment.py './configs/DOMAIN_NAME.json'
+```
+
+For example, if you would like to reproduce the results of ``AntDir`` with PEARL, then you should do 
+
+```
+cd batch_pearl
+python launch_experiment.py './configs/ant-dir.json'
 ```
 
 # Running Experiments
@@ -64,10 +78,12 @@ conda env create -f environment.yml
 
 # Acknowledgement
 
-This reposity was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
+This repository was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
 
 The codes to generate the transition batch for each task and codes to accelerate conventional SAC are obtained modifying the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
+
+The codes for `batch_pearl` are obtained by modifying [PEARL](https://github.com/katerakelly/oyster).
 
 The codes for each environment files in the folder ``env`` are adapted from [PEARL](https://github.com/katerakelly/oyster). Note that the ``rand_param_envs`` in each folder is copied from [rand_param_envs](https://github.com/dennisl88/rand_param_envs/tree/4d1529d61ca0d65ed4bd9207b108d4a4662a4da0).

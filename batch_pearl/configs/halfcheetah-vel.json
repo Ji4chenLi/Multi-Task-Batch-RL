@@ -1,0 +1,10 @@
+{
+    "domain": "halfcheetah-vel",
+    "exp_mode": "hard",
+    "bcq_interactions": 60,
+    "num_trans_context": 100,
+    "algo_params": {
+        "max_path_length":1000,
+        "num_steps_per_eval": 5000
+    }
+}

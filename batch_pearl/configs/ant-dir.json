@@ -1,0 +1,8 @@
+{
+    "domain": "ant-dir",
+    "bcq_interactions": 200,
+    "num_trans_context": 256,
+    "algo_params": {
+        "meta_batch_size": 4
+    }
+}

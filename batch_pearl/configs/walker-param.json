@@ -1,0 +1,6 @@
+{
+    "domain": "walker-param",
+    "num_trans_context": 100,
+    "bcq_interactions": 300,
+    "num_tasks": 30
+}

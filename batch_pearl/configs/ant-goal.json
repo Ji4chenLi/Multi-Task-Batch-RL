@@ -1,0 +1,9 @@
+{
+    "domain": "ant-goal",
+    "num_trans_context": 256,
+    "bcq_interactions": 300,
+    "algo_params": {
+        "meta_batch_size": 10,
+        "kl_lambda": 1.0
+    }
+}

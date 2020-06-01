@@ -1,0 +1,5 @@
+{
+    "domain": "humanoid-ndone-goal",
+    "num_trans_context": 256,
+    "bcq_interactions": 300
+}
