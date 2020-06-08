@@ -82,7 +82,7 @@ def experiment(variant):
     set_seed(variant['seed'])
 
     # create multi-task environment and sample tasks
-    env = env_producer(variant['domain'], seed=0, goal=1.0)
+    env = env_producer(variant['domain'], seed=0)
     obs_dim = int(np.prod(env.observation_space.shape))
     action_dim = int(np.prod(env.action_space.shape))
     reward_dim = 1

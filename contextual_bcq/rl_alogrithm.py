@@ -192,10 +192,9 @@ class BatchMetaRLAlgorithm(metaclass=abc.ABCMeta):
 
         self._log_stats(epoch)
         if epoch > 0:
-            # Save the final results
             snapshot = self._get_snapshot(epoch)
             logger.save_itr_params(epoch + 1, snapshot)
-            gt.stamp('saving', unique=False)
+        gt.stamp('saving', unique=False)
 
         self.policy.end_epoch(epoch)
         self.path_collector.end_epoch(epoch)

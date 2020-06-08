@@ -167,8 +167,6 @@ class BatchMetaRLAlgorithm(metaclass=abc.ABCMeta):
 
             self._end_epoch(epoch)
 
-            gt.stamp('end_epoch', unique=False)
-
     def construct_training_batch(self, raw_batch):
         ''' Construct training batch from raw batch'''
         obs = torch.cat(tuple(
@@ -210,7 +208,7 @@ class BatchMetaRLAlgorithm(metaclass=abc.ABCMeta):
         if epoch > 0:
             snapshot = self._get_snapshot(epoch)
             logger.save_itr_params(epoch + 1, snapshot)
-            gt.stamp('saving', unique=False)
+        gt.stamp('saving', unique=False)
 
         self.trainer.end_epoch(epoch)
         self.path_collector.end_epoch(epoch)

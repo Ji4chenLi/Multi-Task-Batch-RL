@@ -59,7 +59,7 @@ def get_log_dir(variant):
     log_dir = osp.join(log_dir, f"max_path_length_{variant['max_path_length']}")
     log_dir = osp.join(log_dir, f"count_{variant['algo_params']['num_tasks']}")
     log_dir = osp.join(log_dir, f"seed_{variant['seed']}")
-    log_dir = osp.join(log_dir, create_simple_exp_name())
+    # log_dir = osp.join(log_dir, create_simple_exp_name())
 
     log_dir = osp.join(variant['base_log_dir'], log_dir)
 

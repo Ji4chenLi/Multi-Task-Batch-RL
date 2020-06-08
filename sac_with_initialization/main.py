@@ -274,7 +274,7 @@ def get_log_dir(variant, should_include_base_log_dir=True, should_include_seed=T
     if should_include_base_log_dir:
         log_dir = osp.join(args.base_log_dir, log_dir)
 
-    log_dir = osp.join(log_dir, create_simple_exp_name())
+    # log_dir = osp.join(log_dir, create_simple_exp_name())
 
     print(log_dir)
     return log_dir
