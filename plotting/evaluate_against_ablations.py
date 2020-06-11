@@ -63,5 +63,5 @@ if __name__ == "__main__":
         if domain_to_title[domain] == 'HumanoidGoal':
             plt.legend(fontsize=16)
         plt.title(domain_to_title[domain], fontsize=24)
-        plt.savefig(f'./paper_figs/wd-ablation-{domain}.png', bbox_inches='tight')
+        plt.savefig(f'./paper_figs/wd-ablation-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()

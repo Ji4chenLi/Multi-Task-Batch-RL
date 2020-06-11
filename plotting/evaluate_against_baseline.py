@@ -57,6 +57,6 @@ if __name__ == "__main__":
             plt.legend(fontsize=20)
             
         plt.title(domain_to_title[domain], fontsize=24)
-        plt.savefig(f'./paper_figs/wd-{domain}.png', bbox_inches='tight')
+        plt.savefig(f'./paper_figs/wd-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()
 

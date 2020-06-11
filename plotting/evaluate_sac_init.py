@@ -72,15 +72,15 @@ if __name__ == "__main__":
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
 
-        plt.savefig(f'./paper_figs/init-sac-vs-train-AntDir.png', bbox_inches='tight')
+        plt.savefig(f'./paper_figs/init-sac-vs-train-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()
 
         plt.figure()
         baseline_returns = np.array(baseline_returns)
         baseline_returns = baseline_returns[:, :350].T
 
-        with_init_returns = np.array(with_init_returns)
-        with_init_returns = with_init_returns[:, :350].T
+        # with_init_returns = np.array(with_init_returns)
+        # with_init_returns = with_init_returns[:, :350].T
 
         plot(baseline_returns, 'Randomly init SAC', color=[0, 0, 1, 1])
         plot(with_init_returns, 'SAC init by our method', color=[1, 0, 0, 1])
@@ -94,5 +94,5 @@ if __name__ == "__main__":
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
 
-        plt.savefig(f'./paper_figs/init-sac-vs-wd-AntDir.png', bbox_inches='tight')
+        plt.savefig(f'./paper_figs/init-sac-vs-wd-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()

@@ -62,5 +62,5 @@ if __name__ == "__main__":
         if domain == 'ant-goal':
             plt.legend(fontsize=16)
         plt.title(domain_to_title[domain], fontsize=24)
-        plt.savefig(f'./paper_figs/wd-margin-{domain}.png', bbox_inches='tight')
+        plt.savefig(f'./paper_figs/wd-margin-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()
