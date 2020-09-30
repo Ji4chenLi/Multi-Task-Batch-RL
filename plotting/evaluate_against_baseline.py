@@ -4,12 +4,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 import os
 import importlib
+import pylab
 
 from plotting.plot_utils import get_results, get_pearl_results, plot, domain_to_title
 
 
 if __name__ == "__main__":
-    domain_name = ['ant-dir', 'ant-goal', 'humanoid-openai-dir', 'humanoid-ndone-goal', 'halfcheetah-vel', 'walker-param']
+    domain_name = ['ant-dir', 'ant-goal', 'humanoid-openai-dir', 'halfcheetah-vel', 'walker-param', 'maze-umaze']
     for domain in domain_name:
         if domain != 'walker-param':
             variant_module = importlib.import_module(f'full_model.configs.{domain}')
@@ -44,19 +45,47 @@ if __name__ == "__main__":
         wd_return_smooth_pearl = get_pearl_results(batch_pearl_progress)
 
         plt.figure(figsize=(6, 4))
-        plot(wd_return_smooth_bcq_encoder[:600], 'Contextual BCQ', color=[0, 0, 0.8, 1])
-
         plot(wd_return_smooth_full_model[:600], 'Our model', color=[0.8, 0, 0, 1])
 
+        plot(wd_return_smooth_bcq_encoder[:600], 'Contextual BCQ', color=[0, 0, 0.8, 1])
+
         plot(wd_return_smooth_pearl[:600], 'PEARL', color=[0, 0.8, 0, 1])
+
+        max_full_model = np.mean(wd_return_smooth_full_model[:600], axis=1).max()
+        max_bcq_encoder = np.mean(wd_return_smooth_bcq_encoder[:600], axis=1).max()
+        max_pearl = np.mean(wd_return_smooth_pearl[:600], axis=1).max()
+        
+        gain_bcq_encoder = np.round(abs((max_full_model - max_bcq_encoder) / max_bcq_encoder), 2)
+        gain_pearl = np.round(abs((max_full_model - max_pearl) / max_pearl), 2)
             
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
         
-        if domain_to_title[domain] == 'HumanoidGoal':
-            plt.legend(fontsize=20)
-            
-        plt.title(domain_to_title[domain], fontsize=24)
+        plt.title(f'{domain_to_title[domain]}\n MBML (Ours) +{int(gain_bcq_encoder * 100)}%, +{int(gain_pearl * 100)}%\nover Contextual BCQ, PEARL', fontsize=24)    
         plt.savefig(f'./paper_figs/wd-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()
+
+    # Generate legends
+    
+    x = np.arange(10)
+
+    # create a figure for the data
+    figData = pylab.figure()
+    ax = pylab.gca()
+
+    pylab.plot(x, x * (0+1), label='MBML (Ours)', color=[0.8, 0, 0, 1], linewidth=8.0)
+
+    pylab.plot(x, x * (1+1), label='Contextual BCQ', color=[0, 0, 0.8, 1], linewidth=8.0)
+
+    pylab.plot(x, x * (2+1), label='PEARL', color=[0, 0.8, 0, 1], linewidth=8.0)
+
+    # create a second figure for the legend
+    figLegend = pylab.figure(figsize = (6, 3))
+
+    # produce a legend for the objects in the other figure
+    pylab.figlegend(*ax.get_legend_handles_labels(), loc='center', fontsize=50, labelspacing=1.0)
+
+    # save the legend to files
+    figLegend.savefig("./paper_figs/legend_ablation.png")
+
 

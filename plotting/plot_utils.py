@@ -11,10 +11,10 @@ domain_name = []
 domain_to_title = {
     'ant-dir': 'AntDir', 
     'ant-goal': 'AntGoal', 
-    'humanoid-openai-dir': 'HumanoidDir', 
-    'humanoid-ndone-goal': 'HumanoidGoal', 
+    'humanoid-openai-dir': 'HumanoidDir-M',  
     'halfcheetah-vel': 'HalfCheetahVel', 
-    'walker-param': 'WalkerParam'
+    'walker-param': 'WalkerParam',
+    'maze-umaze': 'UmazeGoal-M',
 }
 
 domain_to_epoch = {
@@ -22,7 +22,6 @@ domain_to_epoch = {
     'ant-goal': 590,
     'ant-dir': 590,
     'humanoid-openai-dir':590,
-    'humanoid-ndone-goal': 590,
     'walker-param': 390,
 }
 

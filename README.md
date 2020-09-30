@@ -86,13 +86,18 @@ Experiments are configured via `.py` configuration files located in `./configs`.
     cd no_triplet_loss_walker_param
     python main.py --config=walker-param
     ```
-4. To get the results of ``neither``, one should go to the ``nether`` folder and run the experiments:
+4. To get the results of ``neither``, one should go to the ``neither`` folder and run the experiments:
 
     ```
     cd neither
     python main.py --config=ant-dir
     ```
-5. After you repeat the procedures above for all the 6 task distributions, one can plot the results by running 
+5. For UmazeGoal-M, we also need the results of ``GT``, one should go to the ``full_model_ground_truth_label`` folder and run the experiments:
+    ```
+    cd full_model_ground_truth_label
+    python main.py --config=maze-umaze
+    ```
+6. After you repeat the procedures above for all the 6 task distributions, one can plot the results by running 
 
     ```
     python -m plotting.evaluate_against_ablations

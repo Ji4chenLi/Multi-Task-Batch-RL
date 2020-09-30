@@ -12,7 +12,7 @@ from plotting.plot_utils import plot, domain_to_title, domain_to_epoch
 
 if __name__ == "__main__":
 
-    domain_name = ['ant-dir', 'ant-goal', 'humanoid-openai-dir', 'humanoid-goal', 'halfcheetah-vel', 'walker-param']
+    domain_name = ['ant-dir', 'ant-goal', 'humanoid-openai-dir', 'halfcheetah-vel', 'walker-param']
     for domain in domain_name:
         variant_module = importlib.import_module(f'sac_with_initialization.configs.{domain}')
         variant = variant_module.params
