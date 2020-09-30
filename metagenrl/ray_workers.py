@@ -4,13 +4,14 @@ import os
 import gym
 import numpy as np
 import ray
-import tensorflow as tf
 from pyarrow import plasma as plasma
 
 import tflog_utils
 import utils
 from model import logger, Agent, Objective, ReplayBuffer
 from utils import placeholder, get_vars
+
+from env_utils import env_producer
 
 
 @ray.remote(num_cpus=0, num_gpus=0.001)
@@ -20,9 +21,9 @@ class ObjectiveServer:
     """
 
     def __init__(self, config, init_vars):
+        import tensorflow as tf
         dconfig = utils.DotDict(config)
 
-        import tensorflow as tf
         plasma.load_plasma_tensorflow_op()
 
         store_socket = utils.get_store_socket()
@@ -44,6 +45,7 @@ class ObjectiveServer:
         obj_optimizer = tf.train.AdamOptimizer(learning_rate=dconfig.obj_func_learning_rate)
         self.train_obj_op = obj_optimizer.apply_gradients(zip(grads, self.obj_vars))
         with tf.control_dependencies([self.train_obj_op]):
+            import tensorflow as tf
             self.update_vars = plasma.tf_plasma_op.tensor_to_plasma([utils.flat(self.obj_vars)],
                                                                     self.plasma_vars_oid,
                                                                     plasma_store_socket_name=store_socket)
@@ -54,6 +56,7 @@ class ObjectiveServer:
         self.sess.run(tf.global_variables_initializer())
 
     def apply_gradients(self, grad_oids, var_oid):
+        import tensorflow as tf
         utils.plasma_prefetch(grad_oids)
         feed_dict = {
             self.plasma_grads_oids: grad_oids,
@@ -78,6 +81,7 @@ class AgentWorker:
     """
 
     def __init__(self, worker_index, config, logdir):
+        import tensorflow as tf
         logger.warning(f'Create agent {worker_index}')
         self.dconfig = utils.DotDict(config)
         self.logdir = logdir
@@ -87,23 +91,37 @@ class AgentWorker:
         self.objective_vars_oid = None
         self.datasets_initialized = False
 
-        import tensorflow as tf
+
         plasma.load_plasma_tensorflow_op()
 
         logger.warning(f'Created agent {worker_index}')
 
+        self.setup()
+
     def setup(self):
+        import tensorflow as tf
         logger.warning(f'Setting up agent {self.worker_index}')
         tf.reset_default_graph()
         self.locals = self._setup(self.dconfig, self.logdir)
 
     def _setup(self, dconfig, logdir):
+        import tensorflow as tf
         """
         Create tensorflow graph and summary writer
         :param dconfig: configuration to use to build the graph
         :param logdir: log directory to write tensorflow logs to
         """
-        env = gym.make(dconfig.env_name)
+
+        if dconfig.env_name == 'ant-dir':
+            # env = gym.make(dconfig.env_name)
+            filename = f'./goals/ant-dir-normal-goals.pkl'
+            idx_list, train_goals, wd_goals, ood_goals = pickle.load(open(filename, 'rb'))
+
+            env = env_producer(dconfig.env_name, 0, train_goals[0])
+
+        else:
+            exit(1)
+
         obs_dim = env.observation_space.shape[0]
         act_dim = env.action_space.shape[0]
 
@@ -117,12 +135,23 @@ class AgentWorker:
         replay_buffer = ReplayBuffer(obs_dim=obs_dim, act_dim=act_dim, size=dconfig.buffer_size,
                                      discount_factor=dconfig.discount_factor)
 
-        # Load the data from the collected buffers
+        # Load from existing buffer
         # bname = f'goal_0{self.worker_index}.zip_pkl' if self.worker_index < 10 else f'goal_{self.worker_index}.zip_pkl'
-        # filename = os.path.join(dconfig.buffer_dir, bname)
-        # replay_buffer.load_from_gzip(filename)
-        # print(replay_buffer.size)
-        # exit()
+
+        # We only load from 00 to ensure all workers have the same buffer
+
+        # import time
+        # start = time.time()
+
+        bname = f'goal_00.zip_pkl'
+        filename = os.path.join(dconfig.buffer_dir, bname)
+        replay_buffer.load_from_gzip(filename)
+        print('replay_buffer.size', replay_buffer.size)
+
+        # end = time.time()
+        # print('Took', end - start)
+        # exit(1)
+
         time = dconfig.recurrent_time_steps if dconfig.recurrent_time_steps > 1 else None
 
         # Create datasets from replay buffer
@@ -303,6 +332,7 @@ class AgentWorker:
         return utils.DotDict(locals())
 
     def _create_restore_savers(self, dconfig):
+        import tensorflow as tf
         """
         Creates a saver used for restoring particular variables
         """
@@ -312,6 +342,7 @@ class AgentWorker:
         restore_desc_list = dconfig.restore if dconfig.restore_count > 1 else [dconfig.restore]
 
         def restore_condition(desc):
+            import tensorflow as tf
             use_not = 0
             if desc[0] == '!':
                 desc = desc[1:]
@@ -329,12 +360,14 @@ class AgentWorker:
                 for vars_to_restore in vars_to_restore_list]
 
     def simulate(self, timesteps_total, target_timesteps):
+        import tensorflow as tf
         """
         Interact with the environment for at least `target_timesteps`
         :param timesteps_total: How many timesteps already have passed since the beginning of training
         :param target_timesteps: How many additional timesteps to simulate (or more if episode not yet finished)
         """
         def get_action(o, noise_scale, state=None):
+            import tensorflow as tf
             """
             Generate a new action using the policy
             """
@@ -352,12 +385,14 @@ class AgentWorker:
             return np.asarray(a).reshape(self.locals.env.action_space.shape), state
 
         def simulate_episode():
+            import tensorflow as tf
             env = self.locals.env
             obs, r, d, ep_ret, ep_len = env.reset(), 0, False, 0, 0
             state = None
             taken_actions = []
 
             for _ in range(self.dconfig.max_episode_length or 10 ** 10):
+                import tensorflow as tf
                 t = ep_len + timesteps_total
                 start_steps = self.dconfig.policy_random_exploration_steps
                 if t > start_steps:
@@ -369,13 +404,16 @@ class AgentWorker:
                 new_obs, r, d, _ = env.step(a)
                 taken_actions.append(a)
                 ep_ret += r
+
+                # if self.worker_index == 0:
+                #     print('a', a, 'r', r, 'ep_ret', ep_ret)
+
                 ep_len += 1
 
                 d = ep_len == self.dconfig.max_episode_length or d
 
-                # TODO: Comment out the codes
                 # Store experience to replay buffer
-                self.locals.replay_buffer.store(obs, a, r, new_obs, d)
+                # self.locals.replay_buffer.store(obs, a, r, new_obs, d)
 
                 obs = new_obs
 
@@ -396,13 +434,19 @@ class AgentWorker:
             reward_total += episode_reward
             shortest_episode = min(shortest_episode, ep_len)
 
-            summary = tf.Summary()
-            tflog_utils.log_histogram(summary, 'distr_episode_actions', taken_actions)
-            tflog_utils.log_scalar(summary, 'episode_reward', episode_reward)
-            tflog_utils.log_scalar(summary, 'episode_length', ep_len)
-            if timesteps >= target_timesteps:
-                tflog_utils.log_scalar(summary, 'timesteps', timesteps)
-            self.summary_writer.add_summary(summary, timesteps_total)
+            # summary = tf.Summary()
+            # tflog_utils.log_histogram(summary, 'distr_episode_actions', taken_actions)
+
+            # tflog_utils.log_scalar(summary, 'episode_reward', episode_reward)
+            # tflog_utils.log_scalar(summary, 'episode_length', ep_len)
+
+            # if timesteps >= target_timesteps:
+            #     tflog_utils.log_scalar(summary, 'timesteps', timesteps)
+            # self.summary_writer.add_summary(summary, timesteps_total)
+
+        summary = tf.Summary()
+        tflog_utils.log_scalar(summary, 'custom_mean_episode_reward', reward_total / episodes)
+        self.summary_writer.add_summary(summary, timesteps_total)
 
         # Reset policy (currently not used)
         if self.dconfig.policy_reset_prob:
@@ -414,11 +458,13 @@ class AgentWorker:
         return timesteps, shortest_episode, reward_total / episodes
 
     def update_critic(self, t):
+        import tensorflow as tf
         self.feed_dict = self._generate_feed_dict(t, self.locals.rb_handle)
         q_step_ops = [self.locals.train_q_op]
         self.sess.run(q_step_ops, self.feed_dict)
 
     def update_policy(self):
+        import tensorflow as tf
         if self.dconfig.obj_func_enabled:
             policy_op = self.locals.train_pi_obj_op
         else:
@@ -430,6 +476,7 @@ class AgentWorker:
 
     def update(self, t, var_oid=None, grad_oid=None, critic=False, policy=False,
                objective_local=False, objective_grads=False):
+
         """
         Update the agent: critic, policy, and / or objective
         :param t: current time step
@@ -440,6 +487,7 @@ class AgentWorker:
         :param objective_local:  whether to update the objective locally
         :param objective_grads:  whether to compute gradients for the objective to update globally
         """
+        import tensorflow as tf
         if var_oid is not None:
             self.objective_vars_oid = var_oid
             utils.plasma_prefetch([var_oid])
@@ -454,21 +502,25 @@ class AgentWorker:
             return self.compute_objective_gradients(t, grad_oid)
 
     def write_summary(self, t):
+        import tensorflow as tf
         self.feed_dict = self._generate_feed_dict(t, self.locals.large_rb_handle)
         summary = self.sess.run(self.summary, self.feed_dict)
         self.summary_writer.add_summary(summary, t)
 
     def _generate_feed_dict(self, t, rb_iterator_handle):
+        import tensorflow as tf
         self.ensure_init_datasets()
         feed_dict = {self.locals.timestep: t,
                      self.locals.handle: rb_iterator_handle}
         return feed_dict
 
     def stop(self):
+        import tensorflow as tf
         self.sess.close()
         self.summary_writer.close()
 
     def ensure_init_datasets(self):
+        import tensorflow as tf
         if self.datasets_initialized:
             return
         self.sess.run([self.locals.replay_buffer_dataset_iterator.initializer,
@@ -476,6 +528,7 @@ class AgentWorker:
         self.datasets_initialized = True
 
     def save(self, checkpoint_dir, global_step):
+        import tensorflow as tf
         path = checkpoint_dir + '/save'
         out = self.saver.save(self.sess, path, global_step=global_step, write_meta_graph=False)
         with open(out + '.history', mode='wb') as file:
@@ -483,6 +536,7 @@ class AgentWorker:
         return out
 
     def restore(self, checkpoint_path, restore_saver=-1, restore_history=True):
+        import tensorflow as tf
         saver = self.restore_savers[restore_saver] if restore_saver > -1 else self.saver
         if restore_history:
             with open(checkpoint_path + '.history', mode='rb') as file:
@@ -490,6 +544,7 @@ class AgentWorker:
         saver.restore(self.sess, checkpoint_path)
 
     def _clipped_minimize(self, optimizer, loss, vars, grad_name=None):
+        import tensorflow as tf
         grads, _ = zip(*optimizer.compute_gradients(loss, vars))
         grads, _ = tf.clip_by_global_norm(grads, clip_norm=self.dconfig.clip_gradient)
         if grad_name is not None:
@@ -497,12 +552,15 @@ class AgentWorker:
         return optimizer.apply_gradients(zip(grads, vars))
 
     def local_update_objective(self):
+        import tensorflow as tf
         self.sess.run(self.locals.train_obj_op, self.feed_dict)
 
     def get_objective_params(self):
+        import tensorflow as tf
         return self.sess.run(self.locals.objective.variables)
 
     def update_objective_params(self, params=None, oid=None):
+        import tensorflow as tf
         if params is not None:
             self.locals.objective.set_variables(self.sess, params)
         if oid is not None:
@@ -511,6 +569,7 @@ class AgentWorker:
             self.sess.run(self.locals.plasma_read_vars, feed_dict)
 
     def compute_objective_gradients(self, t, grad_oid):
+        import tensorflow as tf
         self.feed_dict = self._generate_feed_dict(t, self.locals.large_rb_handle)
 
         if self.objective_vars_oid is not None:

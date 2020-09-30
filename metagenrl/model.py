@@ -362,7 +362,7 @@ class ReplayBuffer:
 
             with gzip.open(path, 'rb') as f:
                 return pickle.load(f)
-        
+
         data = np.array(load_gzip_pickle(filename))
 
         self.obs1_buf = np.stack(list(data[:, 0])).astype(np.float32)
@@ -372,6 +372,10 @@ class ReplayBuffer:
         self.done_buf = data[:, 4].astype(np.float32)
         self.ptr = len(data)
         self.size = len(data)
+
+        mask = self.done_buf.astype(np.bool)
+
+        self.episode_markers = np.arange(len(data))[mask].tolist()
 
     def store(self, obs, act, rew, next_obs, done):
         if self.done_buf[self.ptr]:

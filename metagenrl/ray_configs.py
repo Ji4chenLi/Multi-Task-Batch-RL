@@ -84,9 +84,8 @@ def base(agent_count=8):
     Return config with default parameters
     """
     return {
-        'env_name': 'ant-dir',
-        'max_episode_length': 200,
-        'bcq_interactions': 200,
+        'env_name': 'LunarLanderContinuous-v2',
+        'max_episode_length': None,
         'steps': 10,
         'clip_gradient': 1.0,
         'recurrent_time_steps': 20,

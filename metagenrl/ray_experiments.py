@@ -1,11 +1,11 @@
+import os
 import os.path as osp
 import argparse
 import logging
 import math
-import socket
 
 import numpy as np
-import tensorflow as tf
+
 import ray
 import ray.tune as tune
 
@@ -19,13 +19,17 @@ from ray_extensions import ExtendedTrainable
 
 np.warnings.filterwarnings('ignore')
 logger = logging.getLogger(__name__)
-tf.logging.set_verbosity(tf.logging.ERROR)
+
+
 
 class LLFSExperiment(ExtendedTrainable):
-
     def _setup(self, config):
+        import tensorflow as tf
+
         self.target_timesteps = 1
+
         logger.warning('Starting experiment')
+        tf.logging.set_verbosity(tf.logging.ERROR)
 
         if not isinstance(config['env_name'], list):
             config['env_name'] = [config['env_name']]
@@ -43,8 +47,9 @@ class LLFSExperiment(ExtendedTrainable):
         self.agents = [ray_workers.AgentWorker.remote(i, agent_configs[i], self.logdir) for i in range(dconfig.agent_count)]
         logger.warning('Setting up agents')
         # [ray] There is no way to wait for the actors to finalize initialization, thus we put this in a setup method
-        ray.wait([agent.setup.remote() for agent in self.agents], num_returns=dconfig.agent_count)
-        exit()
+        # Comment this out because we call setup in the __init__ function of agent worker
+        # ray.wait([agent.setup.remote() for agent in self.agents], num_returns=dconfig.agent_count)
+
         logger.warning('Created agents')
 
         if dconfig.restore_count:
@@ -112,20 +117,25 @@ class LLFSExperiment(ExtendedTrainable):
         # Ray object ids for the objective function gradients of each agent
         grad_oids = [None for _ in range(self.dconfig.agent_count)]
 
-        for _ in range(self.dconfig.steps):
-            # TODO: Replace these codes to estimate the discounted episode returns
-            
+        # Set to 1 to log to ray tensorboard more frequenly
+        for _ in range(1):
             # Collect experience
-            simulation_objs = [agent.simulate.remote(t, self.target_timesteps) for agent in self.agents]
+            # simulation_objs = [agent.simulate.remote(t, self.target_timesteps) for agent in self.agents]
+
+            # 600 for 3 or more episodes
+            simulation_objs = [agent.simulate.remote(t, 600) for agent in self.agents]
+
             interaction_lengths, shortest_episodes, rewards = zip(*ray.get(simulation_objs))
             max_interaction_length = max(interaction_lengths)
-            self.target_timesteps = max(shortest_episodes)
+
+            # self.target_timesteps = max(shortest_episodes)
             timesteps_this_iter += max_interaction_length
             t = timesteps_total + timesteps_this_iter
             reward_accumulator.extend(rewards)
 
             # Update critics, policies, and objective function in parallel
-            for j in range(max_interaction_length):
+            # Update 100 steps per epoch and evaluate the policy every 100 steps
+            for j in range(10):
                 should_update_policy = j % self.dconfig.policy_update_delay == 0
                 should_update_objective = self.dconfig.obj_func_enabled \
                                           and self.dconfig.obj_func_update_delay != -1 \
@@ -215,16 +225,22 @@ def train(args):
     """
     Performs meta-training
     """
-    config = configs.base(agent_count=4)
+    config = configs.base(agent_count=2)
 
-    sub_buffer_dir = f"buffers/{config['env_name']}/normal/max_path_length_normal/interactions_{config['bcq_interactions']}k/seed_0"
+    config.update({
+        'env_name': 'ant-dir',
+        'max_episode_length': 200
+    })
+
+    sub_buffer_dir = f"buffers/{config['env_name']}/normal/max_path_length_200/interactions_{config['bcq_interactions']}k/seed_0"
     buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
 
     config.update({
-        'buffer_dir': buffer_dir
+        'buffer_dir': buffer_dir,
     })
-    run(config, run_name=f"public-{config['env_name']}")
 
+    # Run for 10 mil timesteps to collect env transitions
+    run(config, run_name=f"public-{config['env_name']}", timesteps=10000000)
 
 def test(args):
     """

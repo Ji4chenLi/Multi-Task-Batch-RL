@@ -151,7 +151,7 @@ def merge_dicts(base: dict, update: dict):
     new.update(update)
     return new
 
-
+print(tf.__version__)
 class TensorAdamOptimizer(tf.train.AdamOptimizer):
     """
     Adam Optimizer that can be backpropagated through

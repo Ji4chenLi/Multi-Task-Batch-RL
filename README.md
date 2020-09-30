@@ -75,8 +75,25 @@ Experiments are configured via `.py` configuration files located in `./configs`.
     ```
 
 ## Reproducing Results ``Fig. 5`` in our paper.
+Note that to reproduce the results, one need to activate the correct conda environment
 
+1. Run the codes to obtain the training results of MetaGenRL on ``AntDir``
+    ```
+    cd metagenrl
+    python ray_experiments.py train
+    ```
 
+2. Open the tensorboard using the following comments:
+    ```
+    tensorboard --logdir ./ray_results/metagenrl
+    ```
+
+3. Download the results of ``custom_mean_episode_reward`` in tensorboard of either agent ``0`` or agent ``1``. Save the file as ``custom_mean_episode_reward.csv``.
+
+4. Plot the results by running
+    ```
+    python -m plotting.evaluate_metagenrl
+    ```
 
 ## Reproducing Results ``Fig. 6`` in our paper.
 
