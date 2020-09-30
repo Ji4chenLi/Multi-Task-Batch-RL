@@ -27,7 +27,10 @@ class SuperQTrainer(object):
         super().__init__()
 
         self.env = env
-        self.env.set_goal(train_goal)
+        try:
+            self.env.set_goal(train_goal)
+        except AttributeError:
+            self.env.set_target(train_goal)
         self.env.reset()
 
         self.network_ensemble = network_ensemble
@@ -56,14 +59,15 @@ class SuperQTrainer(object):
         """
         # Note that here, we do not calculate the obs_loss.
 
-        pred_rewards = [net(obs, actions) for net in self.network_ensemble]
+        # pred_rewards = [net(obs, actions) for net in self.network_ensemble]
+        pred_rewards = [self.network_ensemble[0](obs, actions) for net in self.network_ensemble]
         reward_loss_task_0 = [F.mse_loss(pred_r[:in_mdp_batch_size], rewards[:in_mdp_batch_size]) for pred_r in pred_rewards]
-
         gt.stamp('get_reward_loss', unique=False)
 
         self.network_ensemble_optimizer.zero_grad()
 
-        [loss.backward() for loss in reward_loss_task_0]
+        # [loss.backward() for loss in reward_loss_task_0]
+        reward_loss_task_0[0].backward()
 
         self.network_ensemble_optimizer.step()
 
@@ -74,20 +78,21 @@ class SuperQTrainer(object):
         """
         if self._need_to_update_eval_statistics:
             
-            if epoch > 180:
-                obs_other_tasks = [obs[in_mdp_batch_size*i:in_mdp_batch_size*(i + 1)] for i in range(1, batch_idxes.shape[0])]
-                actions_other_tasks = [actions[in_mdp_batch_size*i:in_mdp_batch_size*(i + 1)] for i in range(1, batch_idxes.shape[0])]
+            if epoch > -1:
+                obs_other_tasks = [obs[in_mdp_batch_size*i:in_mdp_batch_size*(i + 1)] for i in range(0, batch_idxes.shape[0])]
+                actions_other_tasks = [actions[in_mdp_batch_size*i:in_mdp_batch_size*(i + 1)] for i in range(0, batch_idxes.shape[0])]
                 pred_rewards_other_tasks = [torch.cat(
                     [pred_r[in_mdp_batch_size*i:in_mdp_batch_size*(i + 1)] for pred_r in pred_rewards
-                ], dim=1) for i in range(1, batch_idxes.shape[0])]
+                ], dim=1) for i in range(0, batch_idxes.shape[0])]
 
                 reward_loss_other_tasks = []
                 reward_loss_other_tasks_std = []
+                reward_loss_prop_other_tasks = []
                 num_selected_trans_other_tasks = []
                 for i, item in enumerate(zip(pred_rewards_other_tasks, obs_other_tasks, actions_other_tasks)):
-                    
                     pred_r_other_task, o_other_task, a_other_task = item
                     pred_std = torch.std(pred_r_other_task, dim=1)
+                    # print(pred_std)
                     mask = ptu.get_numpy(pred_std < self.std_threshold)
                     num_selected_trans_other_tasks.append(np.sum(mask))
 
@@ -100,6 +105,8 @@ class SuperQTrainer(object):
                     a_other_task = a_other_task[mask]
 
                     mse_loss = []
+                    mse_loss_prop = []
+
                     for pred_r, o, a in zip(pred_r_record, o_other_task, a_other_task):
                         if self.domain == 'ant-dir':
                             qpos = np.concatenate([np.zeros(2), o[:13]])
@@ -116,16 +123,23 @@ class SuperQTrainer(object):
                         elif self.domain == 'halfcheetah-vel':
                             qpos = np.concatenate([np.zeros(1), o[:8]])
                             qvel = o[8:17]
+                        elif 'maze' in self.domain:
+                            qpos = o[:2]
+                            qvel = o[2:4]
 
                         self.env.set_state(qpos, qvel)
                         _, r, _, _ = self.env.step(a)
                         mse_loss.append((pred_r - r) ** 2)
+                        mse_loss_prop.append(np.sqrt((pred_r - r) ** 2 / r ** 2))
+
                     if len(mse_loss) > 0:
                         reward_loss_other_tasks.append(np.mean(np.stack(mse_loss), axis=0).tolist())
                         reward_loss_other_tasks_std.append(np.std(np.stack(mse_loss), axis=0).tolist())
+                        reward_loss_prop_other_tasks.append(np.mean(np.stack(mse_loss_prop), axis=0).tolist())
 
                 self.eval_statistics['average_task_reward_loss_other_tasks_mean'] = np.mean(reward_loss_other_tasks, axis=1)
                 self.eval_statistics['average_task_reward_loss_other_tasks_std'] = np.std(reward_loss_other_tasks, axis=1)
+                self.eval_statistics['average_task_reward_loss_prop_other_task'] = np.mean(reward_loss_prop_other_tasks, axis=1)
 
                 self.eval_statistics['num_selected_trans_other_tasks'] = num_selected_trans_other_tasks
 

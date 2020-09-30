@@ -1,0 +1,9 @@
+{
+    "domain": "maze-medium",
+    "num_trans_context": 128,
+    "bcq_interactions": 100,
+    "algo_params": {
+        "max_path_length":600,
+        "num_steps_per_eval": 3000
+    }
+}

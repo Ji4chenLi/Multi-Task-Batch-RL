@@ -36,7 +36,7 @@ ray.init(
     # Need to set redis memory for
     # fast loading of buffer.
     # Not sure why.
-    redis_max_memory=34359738368, #34 Gb
+    redis_max_memory=1073741824 * 15, #10 Gb
 )
 
 def get_log_dir(variant):
@@ -95,8 +95,13 @@ if __name__ == "__main__":
 	variant['idx_list'] = idx_list
 
 	# Directory to the buffers, trained policies and ensemble_params
-	sub_buffer_dir = f"../data_and_trained_models/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-	buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+	# sub_buffer_dir = f"../data_and_trained_models/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+	# buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+
+	if socket.gethostname() == 'cauchy':
+		buffer_dir = f"/hdd/jiachen/{variant['domain']}-{variant['max_path_length']}-{variant['exp_mode']}-buffers"
+	else:
+		buffer_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
 
 	print("Buffer directory: " + buffer_dir)
 

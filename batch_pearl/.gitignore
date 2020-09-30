@@ -5,12 +5,17 @@
 __pycache__
 
 *.npy
-*.pkl
+# *.pkl
 
 *.swp
 *.swo
 
 .envrc
+
+.vscode
+configs/__pycache__
+env/__pycache__
+
 
 ## Project
 
@@ -19,3 +24,5 @@ __pycache__
 
 /output
 /output/**
+
+

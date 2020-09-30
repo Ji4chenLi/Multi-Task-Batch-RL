@@ -12,7 +12,7 @@ variant = dict(
         num_tasks=10,
         num_train_loops_per_epoch=20,
     ),
-    std_threshold=0.1,
+    std_threshold=10.0,
     num_network_ensemble=20,
     bcq_interactions=600,
     max_path_length=200,
@@ -21,5 +21,5 @@ variant = dict(
     P_hidden_sizes=[128],
     base_log_dir='data_reward_predictions',
     start=0,
-    end=10,
+    end=1,
 )

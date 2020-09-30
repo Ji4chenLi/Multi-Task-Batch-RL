@@ -384,37 +384,37 @@ class MetaRLAlgorithm(metaclass=abc.ABCMeta):
         eval_util.dprint('WD test final achieved')
         eval_util.dprint(wd_final_achieved_pair)
 
-        ### OOD tasks
+        # ### OOD tasks
 
-        eval_util.dprint('evaluating on {} wd tasks'.format(len(self.ood_goals)))
-        ood_final_returns, ood_final_achieved = self._do_eval(self.ood_goals, epoch)
+        # eval_util.dprint('evaluating on {} wd tasks'.format(len(self.ood_goals)))
+        # ood_final_returns, ood_final_achieved = self._do_eval(self.ood_goals, epoch)
 
-        # Comment this line for walker-param
-        # ood_final_achieved_pair = [(ood_final_achieved[i], goal) for i, goal in enumerate(self.ood_goals)]
-        ood_final_achieved_pair = [(ood_final_achieved[i], -1) for i, goal in enumerate(self.ood_goals)]
+        # # Comment this line for walker-param
+        # # ood_final_achieved_pair = [(ood_final_achieved[i], goal) for i, goal in enumerate(self.ood_goals)]
+        # ood_final_achieved_pair = [(ood_final_achieved[i], -1) for i, goal in enumerate(self.ood_goals)]
 
-        eval_util.dprint('OOD test final achieved')
-        eval_util.dprint(ood_final_achieved_pair)
+        # eval_util.dprint('OOD test final achieved')
+        # eval_util.dprint(ood_final_achieved_pair)
 
         # # save the final posterior
         # self.agent.log_diagnostics(self.eval_statistics)
 
         avg_train_return = np.mean(train_final_returns)
         avg_wd_return = np.mean(wd_final_returns)
-        avg_ood_return = np.mean(ood_final_returns)
+        # avg_ood_return = np.mean(ood_final_returns)
 
         self.eval_statistics['AverageReturn_all_train_tasks'] = avg_train_return
         self.eval_statistics['AverageReturn_all_wd_tasks'] = avg_wd_return
-        self.eval_statistics['AverageReturn_all_ood_tasks'] = avg_ood_return
+        # self.eval_statistics['AverageReturn_all_ood_tasks'] = avg_ood_return
 
         self.eval_statistics['Return_all_train_tasks'] = train_final_returns
         self.eval_statistics['Return_all_wd_tasks'] = wd_final_returns
-        self.eval_statistics['Return_all_ood_tasks'] = ood_final_returns
+        # self.eval_statistics['Return_all_ood_tasks'] = ood_final_returns
 
 
         self.eval_statistics['Achieved_all_train_tasks'] = train_final_achieved_pair
         self.eval_statistics['Achieved_all_wd_tasks'] = wd_final_achieved_pair
-        self.eval_statistics['Achieved_all_ood_tasks'] = ood_final_achieved_pair
+        # self.eval_statistics['Achieved_all_ood_tasks'] = ood_final_achieved_pair
 
         for key, value in self.eval_statistics.items():
             logger.record_tabular(key, value)

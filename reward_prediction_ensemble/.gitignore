@@ -107,7 +107,6 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
 venv/
 ENV/
 env.bak/
@@ -136,3 +135,12 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Projects
+.vscode
+configs/__pycache__
+pointmaze/__pycache__
+env/__pycache__
+/results
+compare.py
+data_reward_predictions/

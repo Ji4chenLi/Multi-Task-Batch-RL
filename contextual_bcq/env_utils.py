@@ -6,6 +6,12 @@ import numpy as np
 from env.hopper import HopperVelEnv
 from env.half_cheetah  import HalfCheetahVelEnv
 from env.ant_goal import AntGoalEnv
+from env.ant_dir import AntDirEnv
+from env.humanoid_dir import HumanoidDirEnv
+from env.humanoid_dir_openai import HumanoidDirEnvOpenAI
+from env.humanoid_goal_ndone import HumanoidGoalEnvNDone
+from env.walker_param import Walker2DRandParamsEnv
+from env.maze2d import MazeUmazeEnv, MazeMediumEnv
 
 def get_dim(space):
     if isinstance(space, Box):
@@ -141,7 +147,14 @@ def domain_to_env(name):
         'hopper-vel': HopperVelEnv,
         'ant': AntEnv,
         'ant-goal': AntGoalEnv,
+        'ant-dir': AntDirEnv,
+        'humanoid-dir':HumanoidDirEnv,
+        'humanoid-openai-dir': HumanoidDirEnvOpenAI,
+        'humanoid-ndone-goal': HumanoidGoalEnvNDone,
         'walker2d': Walker2dEnv,
+        'walker-param': Walker2DRandParamsEnv,
+        'maze-umaze': MazeUmazeEnv, 
+        'maze-medium': MazeMediumEnv,
     }[name]
 
 
@@ -155,8 +168,15 @@ def domain_to_epoch(name):
         'hopper': 50,
         'hopper-vel': 50,
         'ant-goal': 590,
+        'ant-dir': 590,
         'ant': 5000,
-        'walker2d': 5000
+        'humanoid-dir':590,
+        'humanoid-openai-dir':590,
+        'humanoid-ndone-goal': 590,
+        'walker2d': 5000,
+        'walker-param': 390,
+        'maze-umaze': 50, 
+        'maze-medium': 190,
     }[name]
 
 
@@ -166,15 +186,19 @@ def domain_to_num_goals(name):
         'halfcheetah-vel': 32,
         'hopper-vel': 16,
         'ant-goal': 32,
+        'ant-dir': 32,
+        'humanoid-dir': 32,
+        'humanoid-openai-dir': 10,
+        'humanoid-ndone-goal': 10,
+        'walker-param': 32,
+        'maze-umaze': 10, 
+        'maze-medium': 10,
     }[name]
 
 
 def env_producer(domain, seed, goal=None):
 
-    if goal is not None:
-        env = domain_to_env(domain)(goal=goal)
-    else:
-        env = domain_to_env(domain)()
+    env = domain_to_env(domain)(goal=goal)
     env.seed(seed)
     env = NormalizedBoxEnv(env)
 

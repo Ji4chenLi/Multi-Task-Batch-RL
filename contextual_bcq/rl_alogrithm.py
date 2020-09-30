@@ -104,18 +104,18 @@ class BatchMetaRLAlgorithm(metaclass=abc.ABCMeta):
 
             assert len(evaluation_wd_obj_id_list) == len(self.wd_goals)
 
-            evaluation_ood_obj_id_list = []
-            count = 0
-            while count < len(self.ood_goals) :
-                if len(self.ood_goals) - count < self.num_workers:
-                    evaluation_obj_id = self.path_collector.async_evaluate(self.ood_goals[count:])
-                    count = len(self.ood_goals)
-                else:
-                    evaluation_obj_id = self.path_collector.async_evaluate(self.ood_goals[count:count + self.num_workers])
-                    count += self.num_workers
-                evaluation_ood_obj_id_list.extend(evaluation_obj_id)
+            # evaluation_ood_obj_id_list = []
+            # count = 0
+            # while count < len(self.ood_goals) :
+            #     if len(self.ood_goals) - count < self.num_workers:
+            #         evaluation_obj_id = self.path_collector.async_evaluate(self.ood_goals[count:])
+            #         count = len(self.ood_goals)
+            #     else:
+            #         evaluation_obj_id = self.path_collector.async_evaluate(self.ood_goals[count:count + self.num_workers])
+            #         count += self.num_workers
+            #     evaluation_ood_obj_id_list.extend(evaluation_obj_id)
 
-            assert len(evaluation_ood_obj_id_list) == len(self.ood_goals)
+            # assert len(evaluation_ood_obj_id_list) == len(self.ood_goals)
 
             gt.stamp('set_up_evaluation', unique=False)
 
@@ -150,11 +150,11 @@ class BatchMetaRLAlgorithm(metaclass=abc.ABCMeta):
             self.final_wd_achieved = [item[1] for item in eval_wd_returns]
             self.wd_avg_returns = np.mean(self.avg_wd_episode_returns)
 
-            eval_ood_returns = ray.get(evaluation_ood_obj_id_list)
+            # eval_ood_returns = ray.get(evaluation_ood_obj_id_list)
 
-            self.avg_ood_episode_returns = [item[0] for item in eval_ood_returns]
-            self.final_ood_achieved = [item[1] for item in eval_ood_returns]
-            self.ood_avg_returns = np.mean(self.avg_ood_episode_returns)
+            # self.avg_ood_episode_returns = [item[0] for item in eval_ood_returns]
+            # self.final_ood_achieved = [item[1] for item in eval_ood_returns]
+            # self.ood_avg_returns = np.mean(self.avg_ood_episode_returns)
 
             gt.stamp('evaluation', unique=False)
 

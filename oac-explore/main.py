@@ -283,7 +283,7 @@ if __name__ == "__main__":
                         gpu_id=gpu_id,
 
                         # Save the params every snapshot_gap and override previously saved result
-                        snapshot_gap=100,
+                        snapshot_gap=10,
                         snapshot_mode='gap_and_final',
 
                         log_dir=variant['log_dir']

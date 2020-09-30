@@ -71,7 +71,7 @@ from utils.env_utils import env_producer
 
 # print([idx_list, train_goals, wd_goals, ood_goals])
 
-# #-------------------Humanoid-NDone-Goal-Normal--------------------------
+#-------------------Humanoid-OpenAI-Goal-Normal--------------------------
 
 # np.random.seed(1337)
 
@@ -90,7 +90,7 @@ from utils.env_utils import env_producer
 # idx_list = list(range(10))
 # train_goals = train_goals[idx_list]
 
-# filename = './goals/humanoid-ndone-goal-normal-goals.pkl'
+# filename = './goals/humanoid-openai-goal-normal-goals.pkl'
 # with open(filename, 'wb') as f:
 #     pickle.dump([idx_list, train_goals, wd_goals, ood_goals], f)
 
@@ -152,17 +152,75 @@ from utils.env_utils import env_producer
 
 # #---------------------Walker-Param-Normal-------------------------
 
-sample_env = env_producer('walker-param', 0)
-train_goals = sample_env.sample_tasks(30, is_train=True, is_within_distribution=True)
-wd_goals = sample_env.sample_tasks(8, is_train=False, is_within_distribution=True)
-ood_goals = sample_env.sample_tasks(8, is_train=False, is_within_distribution=False)
+# sample_env = env_producer('walker-param', 0)
+# train_goals = sample_env.sample_tasks(32, is_within_distribution=True)
+# wd_goals = sample_env.sample_tasks(8, is_within_distribution=True)
+# ood_goals = sample_env.sample_tasks(8, is_within_distribution=False)
 
-idx_list = list(range(30))
-train_goals = [train_goals[idx] for idx in idx_list]
+# idx_list = list(range(30))
+# train_goals = train_goals[:30]
 
-filename = './goals/walker-param-normal-goals.pkl'
+# filename = './goals/walker-param-normal-goals.pkl'
+# with open(filename, 'wb') as f:
+#     pickle.dump([idx_list, train_goals, wd_goals, ood_goals], f)
+
+# # print([idx_list, train_goals, wd_goals, ood_goals])
+
+#---------------------Maze-Umaze-Noraml-------------------------
+
+np.random.seed(1336)
+
+x_up = np.random.uniform(0.4, 1.2, size=(5,))
+x_down = np.random.uniform(2.4, 3.2, size=(5,))
+x = np.concatenate([x_up, x_down])
+y = np.random.uniform(1.0, 2.0, size=(10,))
+train_goals = np.stack([x, y], axis=-1)
+
+x_up = np.random.uniform(0.4, 1.2, size=(5,))
+x_down = np.random.uniform(2.4, 3.2, size=(5,))
+x = np.concatenate([x_up, x_down])
+y = np.random.uniform(1.0, 2.0, size=(10,))
+wd_goals = np.stack([x, y], axis=-1)
+
+ood_goals = np.random.uniform(0.5, 1.5, size=(8,))
+
+idx_list = list(range(10))
+
+filename = './goals/maze-umaze-normal-goals.pkl'
 with open(filename, 'wb') as f:
     pickle.dump([idx_list, train_goals, wd_goals, ood_goals], f)
 
 print([idx_list, train_goals, wd_goals, ood_goals])
-# #----------------------------------------------------------------
+
+#-----------------------Maze-Medium-Normal------------------------------
+
+np.random.seed(1336)
+
+x_left = np.random.uniform(0.4, 2.2, size=(5,))
+y_left = np.random.uniform(0.4, 2.2, size=(5,))
+train_goals_left = np.stack([x_left, y_left], axis=-1)
+
+x_right = np.random.uniform(0.4, 2.2, size=(5,))
+y_right = np.random.uniform(4.4, 6.2, size=(5,))
+train_goals_right = np.stack([x_right, y_right], axis=-1)
+
+train_goals = np.concatenate([train_goals_left, train_goals_right], axis=0)
+
+x_left = np.random.uniform(0.4, 2.2, size=(5,))
+y_left = np.random.uniform(0.4, 2.2, size=(5,))
+wd_goals_left = np.stack([x_left, y_left], axis=-1)
+
+x_right = np.random.uniform(0.4, 2.2, size=(5,))
+y_right = np.random.uniform(4.4, 6.2, size=(5,))
+wd_goals_right = np.stack([x_right, y_right], axis=-1)
+
+wd_goals = np.concatenate([wd_goals_left, wd_goals_right], axis=0)
+ood_goals = np.random.uniform(0.5, 1.5, size=(8,))
+
+idx_list = list(range(10))
+
+filename = './goals/maze-medium-normal-goals.pkl'
+with open(filename, 'wb') as f:
+    pickle.dump([idx_list, train_goals, wd_goals, ood_goals], f)
+
+print([idx_list, train_goals, wd_goals, ood_goals])

@@ -11,6 +11,7 @@ from env.humanoid_dir import HumanoidDirEnv
 from env.humanoid_dir_openai import HumanoidDirEnvOpenAI
 from env.humanoid_goal_ndone import HumanoidGoalEnvNDone
 from env.walker_param import Walker2DRandParamsEnv
+from env.maze2d import MazeUmazeEnv, MazeMediumEnv
 
 def get_dim(space):
     if isinstance(space, Box):
@@ -152,6 +153,8 @@ def domain_to_env(name):
         'humanoid-ndone-goal': HumanoidGoalEnvNDone,
         'walker2d': Walker2dEnv,
         'walker-param': Walker2DRandParamsEnv,
+        'maze-umaze': MazeUmazeEnv, 
+        'maze-medium': MazeMediumEnv,
     }[name]
 
 
@@ -172,6 +175,8 @@ def domain_to_epoch(name):
         'humanoid-ndone-goal': 590,
         'walker2d': 5000,
         'walker-param': 390,
+        'maze-umaze': 50, 
+        'maze-medium': 190,
     }[name]
 
 
@@ -186,6 +191,8 @@ def domain_to_num_goals(name):
         'humanoid-openai-dir': 10,
         'humanoid-ndone-goal': 10,
         'walker-param': 32,
+        'maze-umaze': 10, 
+        'maze-medium': 10,
     }[name]
 
 
