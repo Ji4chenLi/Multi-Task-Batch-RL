@@ -23,7 +23,7 @@ To reproduce the results, we provide the collected transition buffers for each o
 tar -xvf data_and_trained_model.tar.gz
 ```
 
-To reproduce the results of Fig. 9, one should further download the multi-task policy trained without reward ensemble from the [link](https://drive.google.com/file/d/1zIGOt3DgqtOqFjnKzVOKL5L92hwiOmra/view?usp=sharing). After downloading the file, use the following command to unzip the files
+To reproduce the results of Fig. 11, one should further download the multi-task policy trained without reward ensemble from the [link](https://drive.google.com/file/d/1zIGOt3DgqtOqFjnKzVOKL5L92hwiOmra/view?usp=sharing). After downloading the file, use the following command to unzip the files
 ```
 tar -xvf full_model_no_ensemble_results.tar.gz
 ```
@@ -64,7 +64,7 @@ Experiments are configured via `.py` configuration files located in `./configs`.
     python -m plotting.evaluate_against_baseline
     ```
 
-## Reproducing Results ``Fig. 5`` in our paper.
+## Reproducing Results ``Fig. 6`` in our paper.
 
  Note that we already obtain the results of our full model by following the procedures to reproduce Fig. 4 in our paper.
 
@@ -103,9 +103,9 @@ Experiments are configured via `.py` configuration files located in `./configs`.
     python -m plotting.evaluate_against_ablations
     ```
 
-## Reproducing Results ``Fig. 6`` and ``Fig. 11`` in our paper.
+## Reproducing Results ``Fig. 8`` and ``Fig. 13`` in our paper.
 
-To reproduce the results of Fig. 6 and Fig. 11 in the paper, one needs to run the original SAC ``oac-explore`` on ``all`` training tasks. And run the SAC initialized by our method ``sac_with_initialization`` and a variation of SAC ``sac_baseline`` with two identically initialized Q functions trained by different mini-batches on ``all`` testing tasks.
+To reproduce the results of Fig. 8 and Fig. 13 in the paper, one needs to run the original SAC ``oac-explore`` on ``all`` training tasks. And run the SAC initialized by our method ``sac_with_initialization`` and a variation of SAC ``sac_baseline`` with two identically initialized Q functions trained by different mini-batches on ``all`` testing tasks.
 
 There are 8 testing tasks for all the task distributions with ``GOAL_ID`` ranging from ``1 to 8``. However, the lists of ``GOAL_ID`` of training tasks vary from task distributions to task distributions, which are specified below:
 
@@ -139,7 +139,7 @@ There are 8 testing tasks for all the task distributions with ``GOAL_ID`` rangin
     python -m plotting.evaluate_sac_init
     ```
 
-## Reproducing Results ``Fig. 9`` in our paper.
+## Reproducing Results ``Fig. 11`` in our paper.
 
 The configuration files are listed in ``full_model/configs`` and ``full_model_walker_param/configs``. File name specified the value of ``triplet margin``. In paper, we set the values of ``triplet margin`` to be ``[0.0, 2.0, 4.0, 8.0]`` and show the results on five task distributions except for ``HalfCheetahVel``.
 
@@ -159,21 +159,21 @@ The configuration files are listed in ``full_model/configs`` and ``full_model_wa
     python -m plotting.evaluate_ablate_triplet_margin
     ```
 
-## Reproducing Results ``Fig. 10`` in our paper.
+## Reproducing Results ``Fig. 12`` in our paper.
 
 1.  To obtain the results of SAC initialized by this policy, one should go to the ``sac_with_initialization`` folder and run the experiments on all testing tasks by varying ``GOAL_ID`` from 1 to 8:
     ```
     cd sac_with_initialization
     python main.py --config=humanoid-openai-dir --goal=GOAL_ID  --model_root=../data_and_trained_models/full_model_no_ensemble_results  --base_log_dir=./data_without_ensemble
     ```
-2. Note that we have already obtained the results of SAC initialized by our full model and standard SAC when trying to reproduce Fig. 6 and Fig. 11 in the paper. After finishing running the command above for all the testing tasks, one can reproduce Fig. 9 by running 
+2. Note that we have already obtained the results of SAC initialized by our full model and standard SAC when trying to reproduce Fig. 8 and Fig. 13 in the paper. After finishing running the command above for all the testing tasks, one can reproduce Fig. 11 by running 
 
     ```
     python -m plotting.evaluate_ablate_reward_ensemble
     ```
 # Miscellaneous
 
-If you would like to generate the results for the training phase, first you can go to the ``oac-explore`` folder and run the following command to obtain the training buffers. Note that the list of ``GOAL_ID`` varies in different task distributions. The lists of training ``GOAL_ID`` for different task distributions are detailed above when we describe how to reproduce the results of Fig. 6 and Fig. 11 in the paper.
+If you would like to generate the results for the training phase, first you can go to the ``oac-explore`` folder and run the following command to obtain the training buffers. Note that the list of ``GOAL_ID`` varies in different task distributions. The lists of training ``GOAL_ID`` for different task distributions are detailed above when we describe how to reproduce the results of Fig. 8 and Fig. 13 in the paper.
 
 ```
 python main.py --config=ant-dir --goal=GOAL_ID
