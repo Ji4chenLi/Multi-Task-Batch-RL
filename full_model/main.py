@@ -184,25 +184,15 @@ if __name__ == "__main__":
     variant['algo_params']['ood_goals'] = ood_goals
 
     # Directory to the buffers, trained policies and ensemble_params
-    # sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-    # buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+    sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
 
-    # sub_policy_dir = f"policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-    # policy_dir = osp.join(args.data_models_root, sub_policy_dir)
+    sub_policy_dir = f"policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    policy_dir = osp.join(args.data_models_root, sub_policy_dir)
 
-    # sub_ensemble_params_dir = f"reward_prediction_ensemble/{domain}/mode_{exp_mode}/max_path_length_{max_path_length}/goal_"
-    # ensemble_params_dir = osp.join(args.data_models_root, sub_ensemble_params_dir)
+    sub_ensemble_params_dir = f"reward_prediction_ensemble/{domain}/mode_{exp_mode}/max_path_length_{max_path_length}/goal_"
+    ensemble_params_dir = osp.join(args.data_models_root, sub_ensemble_params_dir)
 
-    # Directory to the buffers, trained policies and ensemble_params
-    if socket.gethostname() == 'cauchy':
-        policy_dir = f"/hdd/jiachen/{variant['domain']}-{variant['max_path_length']}-{variant['exp_mode']}-policies"
-        buffer_dir = f"/hdd/jiachen/{variant['domain']}-{variant['max_path_length']}-{variant['exp_mode']}-buffers"
-        ensemble_params_dir = f"/hdd/jiachen/reward_prediction_ensemble_results/{domain}/{exp_mode}/max_path_length_{max_path_length}/goal_"
-    else:
-        policy_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-        buffer_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-        ensemble_params_dir = f"/cephfs/jiachen/mbrl-exp/reward_prediction_ensemble/data_reward_predictions/test/{domain}/mode_{exp_mode}/max_path_length_{max_path_length}/goal_"
-    
     # Load policy
     bcq_policies = []
     for idx in idx_list:

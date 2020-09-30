@@ -177,18 +177,11 @@ if __name__ == "__main__":
 
     # Directory to the buffers, trained policies and ensemble_params
 
-    # sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-    # buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+    sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
 
-    # sub_policy_dir = f"policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-    # policy_dir = osp.join(args.data_models_root, sub_policy_dir)
-
-    if socket.gethostname() == 'cauchy':
-        policy_dir = f"/hdd/jiachen/{variant['domain']}-{variant['max_path_length']}-{variant['exp_mode']}-policies"
-        buffer_dir = f"/hdd/jiachen/{variant['domain']}-{variant['max_path_length']}-{variant['exp_mode']}-buffers"
-    else:
-        policy_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-        buffer_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    sub_policy_dir = f"policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    policy_dir = osp.join(args.data_models_root, sub_policy_dir)
 
      # Load policy
     bcq_policies = []

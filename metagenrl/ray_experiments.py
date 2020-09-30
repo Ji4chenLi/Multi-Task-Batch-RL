@@ -1,3 +1,4 @@
+import os.path as osp
 import argparse
 import logging
 import math
@@ -216,11 +217,9 @@ def train(args):
     """
     config = configs.base(agent_count=4)
 
-    if socket.gethostname() == 'cauchy':
-        buffer_dir = f"/hdd/jiachen/{config['env_name']}-200-normal-buffers"
-    else:
-        buffer_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/buffers/{config['env_name']}/normal/max_path_length_200/interactions_{config['bcq_interactions']}k/seed_0"
-    
+    sub_buffer_dir = f"buffers/{config['env_name']}/normal/max_path_length_normal/interactions_{config['bcq_interactions']}k/seed_0"
+    buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+
     config.update({
         'buffer_dir': buffer_dir
     })
@@ -255,6 +254,7 @@ if __name__ == '__main__':
     parser.add_argument('--objective', action='store', type=str)
     parser.add_argument('--name', action='store', type=str)
     parser.add_argument('--chkp', action='store', type=int, default=-1)
+    parser.add_argument('--data_models_root', default='../data_and_trained_models')
     parsed_args = parser.parse_args()
     init_ray(parsed_args.redis_address)
     func = FUNCTION_MAP[parsed_args.command]

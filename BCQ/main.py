@@ -45,42 +45,6 @@ def evaluate_policy(policy, eval_episodes=10, max_path_length=200):
 	return mean, std
 
 
-def evaluate_wd_tasks(policy, wd_goals, eval_episodes=10, max_path_length=200):
-
-	mean_list = []
-	std_list = []
-	for goal in wd_goals:
-		episode_returns = []
-		eval_env.set_goal(goal)
-		for _ in range(eval_episodes):
-			obs = eval_env.reset()
-			done = False
-			path_length = 0
-
-			episode_ret = 0
-
-			while not done and path_length < max_path_length:
-				action = policy.select_action(np.array(obs))
-				obs, reward, done, _ = eval_env.step(action)
-
-				episode_ret += reward
-				
-				path_length += 1
-
-			episode_returns.append(episode_ret)
-		mean = np.mean(episode_returns)
-		std = np.std(episode_returns)
-
-		mean_list.append(mean)
-		std_list.append(std)
-
-	print("---------------------------------------")
-	print(f"Evaluation over {eval_episodes} episodes on WD tasks. mean {mean_list}, std {std_list}")
-	print("---------------------------------------")
-	return np.array(mean_list), np.array(std_list)
-
-
-
 def train_loop():
 	training_iters = 0
 	save_root_dir = f"./results/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{interactions}k/seed_{args.seed}/goal_{goal_id}/"
@@ -107,36 +71,31 @@ def train_loop():
 		np.save(save_root_dir + "mean.npy", np.array(mean_list))
 		np.save(save_root_dir + "std.npy", np.array(std_list))
 
-		if best_mean > 0:
-			wd_means, wd_std = evaluate_wd_tasks(policy, wd_goals, eval_episodes=args.eval_episodes, max_path_length=max_path_length)
-			np.save(save_root_dir + "wd_mean.npy", wd_means)
-			np.save(save_root_dir + "wd_std.npy", wd_std)
-	# 	if not os.path.exists(save_root_dir + "policies"): 
-	# 		os.makedirs(save_root_dir + "policies")
-	# 	policy_file_name = f"policies/policy_num_{num}"
-	# 	pickle.dump(policy, open(save_root_dir + policy_file_name, "wb"))
+		if not os.path.exists(save_root_dir + "policies"): 
+			os.makedirs(save_root_dir + "policies")
+		policy_file_name = f"policies/policy_num_{num}"
+		pickle.dump(policy, open(save_root_dir + policy_file_name, "wb"))
 
-	# 	num += 1
-	# 	training_iters += args.eval_freq
+		num += 1
+		training_iters += args.eval_freq
 
-	# 	print("Training iterations: " + str(training_iters), flush=True)
+		print("Training iterations: " + str(training_iters), flush=True)
 
-	# print(f'Save the best policy, with the best index: {best_index}')
+	print(f'Save the best policy, with the best index: {best_index}')
 	
-	# policies_root = f"./policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{interactions}k/seed_{args.seed}"
-	# if not os.path.exists(policies_root): 
-	# 	os.makedirs(policies_root)
+	policies_root = f"./policies/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{interactions}k/seed_{args.seed}"
+	if not os.path.exists(policies_root): 
+		os.makedirs(policies_root)
 
-	# best_policy_fname = save_root_dir + f"policies/policy_num_{best_index}"
-	# with open(best_policy_fname, 'rb') as f:
-    #         best_policy = pickle.load(f)
+	best_policy_fname = save_root_dir + f"policies/policy_num_{best_index}"
+	with open(best_policy_fname, 'rb') as f:
+            best_policy = pickle.load(f)
 
-	# if goal_id < 10:
-	# 	policy_file_name = policies_root + f"/policy_goal_0{goal_id}"
-	# else:
-	# 	policy_file_name = policies_root + f"/policy_goal_{goal_id}"
-	# pickle.dump(best_policy, open(policy_file_name, "wb"))
-
+	if goal_id < 10:
+		policy_file_name = policies_root + f"/policy_goal_0{goal_id}"
+	else:
+		policy_file_name = policies_root + f"/policy_goal_{goal_id}"
+	pickle.dump(best_policy, open(policy_file_name, "wb"))
 
 
 
@@ -146,7 +105,7 @@ if __name__ == "__main__":
 	parser.add_argument("--seed", default=0, type=int)					# Sets Gym, PyTorch and Numpy seeds
 	parser.add_argument('--goal', default=0, type=int)
 	parser.add_argument('--eval_episodes', default=10, type=int)
-	parser.add_argument('--config', type=str, default='humanoid-dir')
+	parser.add_argument('--config', type=str, default='ant-dir')
 	parser.add_argument("--eval_freq", default=5000, type=float)			# How often (time steps) we evaluate
 	args = parser.parse_args()
 
@@ -166,15 +125,17 @@ if __name__ == "__main__":
 
 	goal_id = idx_list[args.goal]
 
-	# if interactions == -1:
-	# 	interactions = domain_to_epoch(domain) + 10
-	# 	buffer_file_name = '/hdd/jiachen/humanoid-dir-buffers/params.zip_pkl'
-	# else:
-	# 	buffer_file_name = f'/itr_{interactions}.zip_pkl'
+	if interactions == -1:
+		interactions = domain_to_epoch(domain) + 10
+		buffer_file_name = '/params.zip_pkl'
+	else:
+		buffer_file_name = f'/itr_{interactions}.zip_pkl'
 
-	# folder_name = f'/cephfs/jiachen/mbrl-exp/oac-explore/data/{task}_task_results/{domain}/seed_{args.seed}/max_path_length_{max_path_length}/interactions_{domain_to_epoch(domain) + 10}k/{exp_mode}/goal_{goal_id}'
-	# buffer_name = folder_name + buffer_file_name
-	buffer_name = '/hdd/jiachen/humanoid-dir-buffers/params.zip_pkl'
+	assert args.config == f'{domain}-{exp_mode}-{max_path_length}'
+
+	folder_name = f'../oac-explore/data/{task}_task_results/{domain}/seed_{args.seed}/max_path_length_{max_path_length}/interactions_{domain_to_epoch(domain) + 10}k/{exp_mode}/goal_{goal_id}'
+	
+	buffer_name = folder_name + buffer_file_name
 
 	print('---------------------------------')
 	print(buffer_name)
@@ -213,11 +174,7 @@ if __name__ == "__main__":
 		os.makedirs("./results")
 	
 	env = env_producer(domain, args.seed, goals[args.goal])
-	eval_env = env_producer(domain, args.seed, goals[args.goal])
-	try:
-		print('env goal vel: ' + str(env._goal))
-	except AttributeError:
-		print('env goal vel: ' + str(env.get_target()))
+	print('env goal vel: ' + str(env._goal))
 
 	torch.manual_seed(args.seed)
 	random.seed(args.seed)
@@ -255,24 +212,24 @@ if __name__ == "__main__":
 	dones = buffer['_terminals'][:num_trans]
 	data = list(zip(obs, next_obs, actions, rewards, dones))
 
-	# dest_folder = f'./buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{interactions}k/seed_{args.seed}'
-	# print(dest_folder)
+	dest_folder = f'./buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{interactions}k/seed_{args.seed}'
+	print(dest_folder)
 
-	# if not os.path.exists(dest_folder):
-	# 	os.makedirs(dest_folder)
-	# 	print('Saving the buffer!')
+	if not os.path.exists(dest_folder):
+		os.makedirs(dest_folder)
+		print('Saving the buffer!')
 
-	# if goal_id < 10:
-	# 	buffer_name = '/goal_0' + str(goal_id) + '.zip_pkl'
-	# else:
-	# 	buffer_name = '/goal_' + str(goal_id) + '.zip_pkl'
+	if goal_id < 10:
+		buffer_name = '/goal_0' + str(goal_id) + '.zip_pkl'
+	else:
+		buffer_name = '/goal_' + str(goal_id) + '.zip_pkl'
 
-	# if not os.path.exists(dest_folder + buffer_name):
-	# 	with gzip.open(dest_folder + buffer_name, 'wb') as f:
-	# 		pickle.dump(data, f)
+	if not os.path.exists(dest_folder + buffer_name):
+		with gzip.open(dest_folder + buffer_name, 'wb') as f:
+			pickle.dump(data, f)
 
-	# 	print('Buffer size: ', len(data))
-	# 	print('Buffer saved!')
+		print('Buffer size: ', len(data))
+		print('Buffer saved!')
 	
 	replay_buffer.storage = data
 

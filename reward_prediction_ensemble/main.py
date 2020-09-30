@@ -131,11 +131,8 @@ if __name__ == "__main__":
     variant['idx_list'] = idx_list
 
     # Directory to the buffers and trained policies
-    if socket.gethostname() == 'cauchy':
-        buffer_dir = f'/hdd/jiachen/{domain}-{max_path_length}-{exp_mode}-buffers'
-    else:
-        sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-        buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
+    sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    buffer_dir = osp.join(args.data_models_root, sub_buffer_dir)
     
     # Load buffer
     bcq_buffers = []

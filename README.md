@@ -15,6 +15,16 @@ python install_mujoco.py
 conda env create -f environment.yml
 ```
 
+** To reproduce the results of ``Fig. 5`` in our paper ([MetaGenRL](https://github.com/louiskirsch/metagenrl) related), one should create another conda environment and run the following commands:
+
+```
+pip3 install ray[tune]==0.7.7 gym[all] mujoco_py>=2 tensorflow-gpu==1.15.2 scipy numpy
+
+python3 -c 'import ray; from pyarrow import plasma as plasma; plasma.build_plasma_tensorflow_op()'
+
+```
+which is slightly different from the instruction in the official [MetaGenRL](https://github.com/louiskirsch/metagenrl) repo.
+
 # Data to download 
 
 To reproduce the results, we provide the collected transition buffers for each of the training tasks, the trained BCQ models and ensemble predictors in the [Google Drive](https://drive.google.com/file/d/1YqskGjcPURHs-Al3wGs4ddVKBcw6np5q/view?usp=sharing), i.e., the first phase of training pipeline. Please download all the data and put them in the ```data_and_trained_models``` folder. Otherwise one should be careful when running the following experiments and one should correctly specify the locations. After downloading the files from Google Drive, use the command below to unzip the file:
@@ -63,6 +73,10 @@ Experiments are configured via `.py` configuration files located in `./configs`.
     ```
     python -m plotting.evaluate_against_baseline
     ```
+
+## Reproducing Results ``Fig. 5`` in our paper.
+
+
 
 ## Reproducing Results ``Fig. 6`` in our paper.
 
@@ -114,6 +128,7 @@ There are 8 testing tasks for all the task distributions with ``GOAL_ID`` rangin
 - HumanoidDir-M: ``[0, 1, 4, 10, 12, 14, 17, 21, 26, 27]``
 - HalfCheetahVel: ``[3, 5, 8, 15, 16, 17, 23, 24, 29, 31]``
 - WalkerParam: ``range from 0 to 29``
+- UmazeGoal-M: ``range from 0 to 9``
 
 1. To get the results of original SAC, one should go to ``oac-explore`` and run the experiments on all training tasks:
 

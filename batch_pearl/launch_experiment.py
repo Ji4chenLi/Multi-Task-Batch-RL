@@ -48,15 +48,9 @@ def experiment(variant):
     idx_list, train_goals, wd_goals, ood_goals = pickle.load(open(filename, 'rb'))
     idx_list = idx_list[:num_tasks]
 
-    # sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-    # buffer_dir = os.path.join(variant['data_models_root'], sub_buffer_dir)
+    sub_buffer_dir = f"buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
+    buffer_dir = os.path.join(variant['data_models_root'], sub_buffer_dir)
 
-    # Directory to the buffers, trained policies and ensemble_params
-    if socket.gethostname() == 'cauchy':
-        buffer_dir = f"/hdd/jiachen/{domain}-{max_path_length}-{exp_mode}-buffers"
-    else:
-        buffer_dir = f"/cephfs/jiachen/mbrl-exp/BCQ/buffers/{domain}/{exp_mode}/max_path_length_{max_path_length}/interactions_{bcq_interactions}k/seed_{seed}"
-        
     print("Buffer directory: " + buffer_dir)
 
 
