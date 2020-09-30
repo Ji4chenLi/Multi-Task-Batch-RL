@@ -75,7 +75,7 @@ Experiments are configured via `.py` configuration files located in `./configs`.
     ```
 
 ## Reproducing Results ``Fig. 5`` in our paper.
-Note that to reproduce the results, one need to activate the correct conda environment
+Note that to reproduce the results, one needs to activate the correct conda environment
 
 1. Run the codes to obtain the training results of MetaGenRL on ``AntDir``
     ```
