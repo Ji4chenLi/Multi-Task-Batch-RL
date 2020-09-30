@@ -203,12 +203,14 @@ Note that one should pay extra attention to ``--data_models_root``.
 
 # Acknowledgement
 
-This repository was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ) and [PEARL](https://github.com/katerakelly/oyster).
+This repository was based on [rlkit](https://github.com/vitchyr/rlkit), [oac-explore](https://github.com/microsoft/oac-explore), [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ), [PEARL](https://github.com/katerakelly/oyster) and [MetaGenRL](https://github.com/louiskirsch/metagenrl).
 
 The codes to generate the transition batch for each task and codes to accelerate conventional SAC are obtained modifying the codes as provided in the [oac-explore](https://github.com/microsoft/oac-explore).
 
 The Batch RL part of this paper is based on the codes as provided in the [BCQ](https://github.com/sfujim/BCQ/tree/master/continuous_BCQ).
 
 The codes for `batch_pearl` are obtained by modifying [PEARL](https://github.com/katerakelly/oyster).
+
+The codes for `metagenrl` are obtained by modifying [MetaGenRL](https://github.com/louiskirsch/metagenrl).
 
 The codes for each environment files in the folder ``env`` are adapted from [PEARL](https://github.com/katerakelly/oyster). Note that the ``rand_param_envs`` in each folder is copied from [rand_param_envs](https://github.com/dennisl88/rand_param_envs/tree/4d1529d61ca0d65ed4bd9207b108d4a4662a4da0).
