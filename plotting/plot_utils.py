@@ -25,6 +25,13 @@ domain_to_epoch = {
     'walker-param': 390,
 }
 
+domain_to_base = {
+    'halfcheetah-vel': -1200,
+    'ant-goal': -750,
+    'ant-dir': 0,
+    'humanoid-openai-dir':0,
+    'walker-param': 0,
+}
 
 def smooth_results(results, smoothing_window=30):
     # Codes adapted from the "https://github.com/microsoft/oac-explore"
