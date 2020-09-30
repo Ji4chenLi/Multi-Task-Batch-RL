@@ -111,8 +111,7 @@ There are 8 testing tasks for all the task distributions with ``GOAL_ID`` rangin
 
 - AntDir: ``[0, 1, 4, 10, 12, 14, 17, 21, 26, 27]``
 - AntGoal: ``range from 0 to 9``
-- AntDir: ``[0, 1, 4, 10, 12, 14, 17, 21, 26, 27]``
-- AntGoal: ``range from 0 to 9``
+- HumanoidDir-M: ``[0, 1, 4, 10, 12, 14, 17, 21, 26, 27]``
 - HalfCheetahVel: ``[3, 5, 8, 15, 16, 17, 23, 24, 29, 31]``
 - WalkerParam: ``range from 0 to 29``
 
