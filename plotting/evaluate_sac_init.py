@@ -10,7 +10,7 @@ import os
 from plotting.plot_utils import plot, domain_to_title, domain_to_epoch, domain_to_base
 
 
-def plot_init_sac_vs_train(conven_returns, with_init_returns, base):
+def plot_init_sac_vs_train(conven_returns, with_init_returns, base, domain_name):
     color = [0, 0, 1, 1]
     mean = np.mean(conven_returns, axis=0)
     std = np.std(conven_returns, axis=0)
@@ -38,7 +38,7 @@ def plot_init_sac_vs_train(conven_returns, with_init_returns, base):
     plt.plot(ours_converge * np.ones(asym_line - base), np.arange(base, asym_line), '--', color='k')
 
     incre = int((350 - ours_converge) / 350 * 100)
-    plt.title(f'AntGoal\nOurs $+{incre}\%$ over Random', fontsize=30)
+    plt.title(f'{domain_name}\nOurs $+{incre}\%$ over Random', fontsize=30)
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
 
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         with_init_returns = np.array(with_init_returns)
         with_init_returns = with_init_returns[:, :350].T
 
-        plot_init_sac_vs_train(conven_returns, with_init_returns, domain_to_base[domain])
+        plot_init_sac_vs_train(conven_returns, with_init_returns, domain_to_base[domain], domain_to_title[domain])
 
         plt.savefig(f'./paper_figs/init-sac-vs-train-{domain_to_title[domain]}.png', bbox_inches='tight')
         plt.show()
