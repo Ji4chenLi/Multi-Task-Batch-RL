@@ -62,8 +62,9 @@ class SuperQTrainer(object):
         pred_rewards = [net(obs, actions) for net in self.network_ensemble]
 
         # If you would like to train the reward estimator without
-        # using the ensemble, please comment out Line 62 and uncomment
-        # the Line 67 to train only one network to predict the rewards
+        # using the ensemble (Reproduce Fig. 7 in our paper), please
+        # comment out Line 62 and uncomment the Line 68 to train only
+        # one network to predict the rewards
         # pred_rewards = [self.network_ensemble[0](obs, actions) for net in self.network_ensemble]
 
         reward_loss_task_0 = [F.mse_loss(pred_r[:in_mdp_batch_size], rewards[:in_mdp_batch_size]) for pred_r in pred_rewards]
